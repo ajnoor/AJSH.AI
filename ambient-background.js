@@ -6,7 +6,7 @@ var root=document.querySelector('.ab-root');if(!root)return;
 try{
 var d=document,html=d.documentElement,cv=root.querySelector('.ab-cv'),
  ctx=cv&&cv.getContext?cv.getContext('2d'):null,
- rm=matchMedia('(prefers-reduced-motion:reduce)').matches,
+ rm=matchMedia('(prefers-reduced-motion:reduce)').matches||matchMedia('(max-width:900px),(pointer:coarse)').matches,
  fine=matchMedia('(hover:hover) and (pointer:fine)').matches,
  nav=navigator,con=nav.connection||{},
  lite=!!(con.saveData||(nav.hardwareConcurrency&&nav.hardwareConcurrency<=2)||(nav.deviceMemory&&nav.deviceMemory<=2)),

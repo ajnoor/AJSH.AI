@@ -62,3 +62,6 @@
 /* pause everything when the tab is hidden */
 html.ab-paused .ab-root *,html.ab-paused .ab-root *:after{animation-play-state:paused!important}
 @media(prefers-reduced-motion:reduce){.ab-root *,.ab-root *:after{animation:none!important;transition:none!important}.ab-st{display:none}}
+
+/* phones/tablets: static ambient only (no loop, beams, streams or continuous animation) */
+@media(max-width:900px),(pointer:coarse){.ab-bm,.ab-st{display:none}.ab-f{animation:none;will-change:auto}.ab-par{will-change:auto}}
