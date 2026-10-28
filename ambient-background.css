@@ -1,0 +1,64 @@
+/* AJSH.AI ambient background. Every selector is scoped to .ab-* so existing styles are untouched.
+   Layers (back to front): light fields > volumetric beams > data streams > neural canvas > vignette. */
+.ab-root{--ab-px:0;--ab-py:0;--ab-s:0;--ab-ga:1;--ab-ease:cubic-bezier(.16,1,.3,1);
+ --ab-v:124,58,237;--ab-i:99,102,241;--ab-p:244,114,182;--ab-l:196,181,253;
+ --ax:18vw;--ay:-14vh;--bx:-20vw;--by:18vh;--cx:30vw;--cy:22vh;--oa:.9;--ob:.5;--oc:.25;
+ position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict}
+:root[data-theme=light] .ab-root{--ab-ga:.5;--ab-l:109,40,217}
+.ab-root *{pointer-events:none}
+.ab-root i{display:block}
+
+/* section-aware evolution (data-sec is set by ambient-background.js) */
+.ab-root[data-sec="1"]{--ax:-22vw;--ay:-6vh;--bx:24vw;--by:12vh;--cx:-10vw;--cy:26vh;--oa:.7;--ob:.75;--oc:.3}
+.ab-root[data-sec="2"]{--ax:10vw;--ay:10vh;--bx:-26vw;--by:-10vh;--cx:26vw;--cy:-4vh;--oa:.85;--ob:.6;--oc:.5}
+.ab-root[data-sec="3"]{--ax:-14vw;--ay:16vh;--bx:18vw;--by:-12vh;--cx:-24vw;--cy:8vh;--oa:.6;--ob:.85;--oc:.3}
+.ab-root[data-sec="4"]{--ax:22vw;--ay:0vh;--bx:-12vw;--by:20vh;--cx:8vw;--cy:-20vh;--oa:.7;--ob:.6;--oc:.25}
+.ab-root[data-sec="5"]{--ax:0vw;--ay:12vh;--bx:-18vw;--by:-8vh;--cx:20vw;--cy:16vh;--oa:1;--ob:.8;--oc:.55}
+
+/* pointer parallax lives on wrappers so it never fights the section transitions */
+.ab-par{position:absolute;inset:0;will-change:transform}
+.ab-p1{transform:translate3d(calc(var(--ab-px)*-14px),calc(var(--ab-py)*-10px),0)}
+.ab-p2{transform:translate3d(calc(var(--ab-px)*-26px),calc(var(--ab-py)*-16px),0)}
+
+/* 1. living light fields: wide soft ellipses, no hard edges */
+.ab-f{position:absolute;left:50%;top:50%;width:120vw;height:78vh;margin:-39vh 0 0 -60vw;
+ transition:transform 2.4s var(--ab-ease),opacity 2.4s var(--ab-ease);will-change:transform,opacity;animation:abDrift 26s ease-in-out infinite alternate}
+.ab-fa{background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(var(--ab-v),calc(.34*var(--ab-ga))),transparent 70%);transform:translate3d(var(--ax),var(--ay),0);opacity:var(--oa)}
+.ab-fb{background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(var(--ab-i),calc(.22*var(--ab-ga))),transparent 70%);transform:translate3d(var(--bx),var(--by),0);opacity:var(--ob);animation-duration:32s;animation-direction:alternate-reverse}
+.ab-fc{background:radial-gradient(ellipse 40% 44% at 50% 50%,rgba(var(--ab-p),calc(.16*var(--ab-ga))),transparent 70%);transform:translate3d(var(--cx),var(--cy),0);opacity:var(--oc);animation-duration:38s}
+@keyframes abDrift{from{translate:-2.5vw 1.5vh;scale:1}to{translate:2.5vw -2vh;scale:1.08}}
+
+/* 2. volumetric beams: soft diagonal light shafts that sway and fade as you scroll */
+.ab-bm{position:absolute;top:-30vh;width:58vmax;height:150vh;transform-origin:50% 0;
+ -webkit-mask-image:linear-gradient(#000,transparent 82%);mask-image:linear-gradient(#000,transparent 82%);
+ opacity:calc(.9 - var(--ab-s)*.45);will-change:rotate;animation:abSway 21s ease-in-out infinite alternate}
+.ab-b1{right:-6vw;background:linear-gradient(104deg,transparent 40%,rgba(var(--ab-l),calc(.09*var(--ab-ga))) 49%,transparent 58%)}
+.ab-b2{left:-8vw;background:linear-gradient(76deg,transparent 42%,rgba(var(--ab-i),calc(.08*var(--ab-ga))) 51%,transparent 60%);animation-duration:27s;animation-direction:alternate-reverse}
+@keyframes abSway{from{rotate:-3deg}to{rotate:3.5deg}}
+
+/* 3. computational energy: thin data streams falling through the page */
+.ab-st i{position:absolute;top:0;bottom:0;width:1px;overflow:hidden;opacity:calc(.7*var(--ab-ga))}
+.ab-st i:after{content:"";position:absolute;left:0;top:0;width:1px;height:26vh;background:linear-gradient(transparent,rgba(var(--ab-l),.55),transparent);will-change:transform;animation:abDrop 9s linear infinite}
+.ab-st i:nth-child(1){left:8%}.ab-st i:nth-child(1):after{animation-duration:11s}
+.ab-st i:nth-child(2){left:19%}.ab-st i:nth-child(2):after{animation-duration:8s;animation-delay:-3s}
+.ab-st i:nth-child(3){left:33%}.ab-st i:nth-child(3):after{animation-duration:13s;animation-delay:-7s}
+.ab-st i:nth-child(4){left:52%}.ab-st i:nth-child(4):after{animation-duration:10s;animation-delay:-5s}
+.ab-st i:nth-child(5){left:68%}.ab-st i:nth-child(5):after{animation-duration:12s;animation-delay:-1s}
+.ab-st i:nth-child(6){left:83%}.ab-st i:nth-child(6):after{animation-duration:9s;animation-delay:-6s}
+.ab-st i:nth-child(7){left:93%}.ab-st i:nth-child(7):after{animation-duration:14s;animation-delay:-9s}
+@keyframes abDrop{from{transform:translateY(-30vh)}to{transform:translateY(110vh)}}
+
+/* 4. neural canvas (drawn by JS), stronger further down the page because the hero has its own effects */
+.ab-cv{position:absolute;inset:0;width:100%;height:100%;opacity:calc(.5 + var(--ab-s)*.5)}
+
+/* 5. vignette keeps edges calm so text stays readable */
+.ab-vg{position:absolute;inset:0;background:radial-gradient(ellipse 85% 70% at 50% 42%,transparent 55%,color-mix(in srgb,var(--bg,#150B2E) 55%,transparent))}
+
+/* mobile: fewer layers */
+@media(max-width:700px){.ab-f{width:170vw;margin-left:-85vw}.ab-b2{display:none}.ab-st i:nth-child(even){display:none}.ab-par{will-change:auto}}
+/* low-power mode (set by JS or by Save-Data / low-core devices) */
+.ab-root.ab-lite .ab-bm,.ab-root.ab-lite .ab-st{display:none}
+.ab-root.ab-lite .ab-f{animation:none}
+/* pause everything when the tab is hidden */
+html.ab-paused .ab-root *,html.ab-paused .ab-root *:after{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.ab-root *,.ab-root *:after{animation:none!important;transition:none!important}.ab-st{display:none}}
