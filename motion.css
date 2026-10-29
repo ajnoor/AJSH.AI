@@ -81,3 +81,13 @@ html.mo .step{scale:1}
 html.mo .vs{clip-path:none!important}
 }
 
+/* Brand colours: real logo colours for social/contact icons (app-icon style, readable in both themes) */
+:root .ib.ig{background:radial-gradient(circle at 30% 107%,#fdf497 0,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);border-color:transparent;color:#fff}
+:root .ib.li{background:#0A66C2;border-color:transparent;color:#fff}
+:root .ib.ig:hover{border-color:transparent;box-shadow:0 8px 20px -8px #d6249f}
+:root .ib.li:hover{border-color:transparent;box-shadow:0 8px 20px -8px #0A66C2}
+.band .cg .btn .ic{box-sizing:content-box;width:18px;height:18px;padding:6px;border-radius:10px;color:#fff}
+.band .cg .btn[href*="wa.me"] .ic{background:#25D366}
+.band .cg .btn[href^="mailto"] .ic{background:#EA4335}
+.band .cg .btn[href*="instagram.com"] .ic{background:radial-gradient(circle at 30% 107%,#fdf497 0,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+.band .cg .btn[href*="linkedin.com"] .ic{background:#0A66C2}
