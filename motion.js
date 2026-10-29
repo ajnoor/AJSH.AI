@@ -6,6 +6,7 @@ root.classList.add('mo');
 try{
  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+ var mob=matchMedia('(max-width:900px),(pointer:coarse)').matches,scrolling=false,sT=0,lastDraw=0;
  var clamp=function(v,a,b){return Math.max(a,Math.min(b,v))};
  /* Hero atmosphere: particle canvas with bounded count and DPR. */
  var fx=hero.querySelector('.fx'),cv=fx&&fx.querySelector('.fx-cv');
@@ -13,10 +14,10 @@ try{
   var ctx=cv.getContext('2d'),W=0,H=0,dpr=1,parts=[],raf=0,visible=true,last=0,px=0,py=0,tx=0,ty=0,cx=0,cy=0,has=false;
   function resize(){
    var r=fx.getBoundingClientRect(),nw=Math.max(1,Math.round(r.width)),nh=Math.max(1,Math.round(r.height)),oldW=W||nw,oldH=H||nh;
-   W=nw;H=nh;dpr=Math.min(window.devicePixelRatio||1,window.innerWidth<700?1:1.5);
+   W=nw;H=nh;dpr=Math.min(window.devicePixelRatio||1,mob||window.innerWidth<700?1:1.5);
    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
    parts.forEach(function(p){p.x=p.x/oldW*W;p.y=p.y/oldH*H});
-   var count=clamp(Math.round(W*H/18000),14,48);
+   var count=mob?clamp(Math.round(W*H/38000),10,16):clamp(Math.round(W*H/18000),14,48);
    while(parts.length<count)parts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.24,vy:(Math.random()-.5)*.22,z:.35+Math.random()*.65,phase:Math.random()*6.28});
    parts.length=count;
   }
@@ -33,7 +34,7 @@ try{
     for(var j=i+1;j<parts.length;j++){var q=parts[j],qx=q.x+px*12*q.z,qy=q.y+py*8*q.z,dx2=x-qx,dy2=y-qy,dd2=dx2*dx2+dy2*dy2;if(dd2<dist*dist){ctx.strokeStyle='rgba('+rgb+','+((1-Math.sqrt(dd2)/dist)*.2)+')';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(qx,qy);ctx.stroke()}}
    }
   }
-  function frame(t){raf=0;if(!visible||d.hidden)return;var dt=last?Math.min(2,(t-last)/16.67):1;last=t;if(fine){px+=(tx-px)*.06;py+=(ty-py)*.06}draw(t);raf=requestAnimationFrame(frame)}
+  function frame(t){raf=0;if(!visible||d.hidden)return;if(mob&&(scrolling||t-lastDraw<33)){raf=requestAnimationFrame(frame);return}lastDraw=t;var dt=last?Math.min(2,(t-last)/16.67):1;last=t;if(fine){px+=(tx-px)*.06;py+=(ty-py)*.06}draw(t);raf=requestAnimationFrame(frame)}
   function start(){if(!reduced&&!raf&&visible&&!d.hidden){last=0;raf=requestAnimationFrame(frame)}}
   function stop(){if(raf){cancelAnimationFrame(raf);raf=0}}
   resize();if('ResizeObserver'in window)new ResizeObserver(resize).observe(fx);else addEventListener('resize',resize);
@@ -51,7 +52,7 @@ try{
  /* Header progress and scroll state. */
  var maxS=1,scrollPending=false;
  function measure(){maxS=Math.max(1,root.scrollHeight-innerHeight)}
- function scroll(){scrollPending=false;var y=window.scrollY||0;header.classList.toggle('sc',y>8);header.style.setProperty('--motion-progress',Math.min(1,y/maxS).toFixed(4));}
+ function scroll(){scrollPending=false;scrolling=true;clearTimeout(sT);sT=setTimeout(function(){scrolling=false},140);var y=window.scrollY||0;header.classList.toggle('sc',y>8);header.style.setProperty('--motion-progress',Math.min(1,y/maxS).toFixed(4));}
  measure();scroll();addEventListener('scroll',function(){if(!scrollPending){scrollPending=true;requestAnimationFrame(scroll)}},{passive:true});addEventListener('resize',function(){measure();scroll()});addEventListener('load',function(){measure();scroll()});
  /* Sliding desktop navigation indicator. */
  var nav=d.getElementById('nav'),ul=nav&&nav.querySelector('ul');

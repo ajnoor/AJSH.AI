@@ -64,3 +64,20 @@ html.mo:not(.rvr) :where(.svc .card,.about,.fq details,.band .cg .btn,.fr,.step,
 html.lp .fx-beam,html.lp .fx-glow.alt{display:none}html.lp .fx-glow,html.lp .fx-grid b{animation:none}
 @media(max-width:900px){.fx-grid{height:42%}.fx-scrim{background:radial-gradient(92% 62% at 50% 28%,color-mix(in srgb,var(--bg) 78%,transparent),transparent 76%)}}
 @media(prefers-reduced-motion:reduce){.fx-glow,.fx-glow.alt,.fx-beam,.fx-grid b,.hero .eyebrow i:after{animation:none!important}.hero .eyebrow,.hero h1,.hero .lead,.hero .cta,.hero .show{animation:none!important}.btn,.card,header,.logo{transition:none!important}html.mo :where(.svc .card,.about,.fq details,.band .cg .btn,.fr,.step,.sh .eyebrow,.sh h2,.lui,.loop,.band){opacity:1!important;translate:none!important;scale:1!important;clip-path:none!important}}
+/* Phones/tablets: keep the motion, drop the expensive parts (blur, clip-path, 3D, animated grid/beams, canvas while scrolling). */
+@media(max-width:900px),(pointer:coarse){
+.hero>.fx{mask-image:none;-webkit-mask-image:none}
+.hero>.fx:after{content:"";position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(transparent,var(--bg))}
+.fx-beam,.fx-glow.alt,.fx-tech{display:none}
+.fx-grid b{animation:none}
+header.sc{-webkit-backdrop-filter:none;backdrop-filter:none;background:color-mix(in srgb,var(--bg) 97%,transparent)}
+.svc .card,.svc .card:hover,.svc .card:focus-visible{transform:none;transform-style:flat}
+.svc .card:before{display:none}
+.hero .show{animation-duration:.8s}
+html.mo :where(.svc .card,.about,.fq details,.band .cg .btn,.fr,.step,.sh .eyebrow,.sh h2,.lui,.loop,.band){transition:opacity .55s var(--motion-ease) var(--motion-delay,0ms),translate .55s var(--motion-ease) var(--motion-delay,0ms)}
+html.mo .sh h2{clip-path:none}
+html.mo .lui,html.mo .band{clip-path:none;opacity:0;translate:0 22px}
+html.mo .step{scale:1}
+html.mo .vs{clip-path:none!important}
+}
+

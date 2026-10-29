@@ -76,7 +76,7 @@ if(fine&&!rm)addEventListener('pointermove',function(e){if(e.pointerType==='touc
 function meas(){maxY=Math.max(1,html.scrollHeight-innerHeight)}
 var st=false;
 function onScroll(){st=false;sy=window.scrollY||0;root.style.setProperty('--ab-s',clamp(sy/maxY,0,1).toFixed(4))}
-addEventListener('scroll',function(){if(!st){st=true;requestAnimationFrame(onScroll)}},{passive:true});
+if(!rm)addEventListener('scroll',function(){if(!st){st=true;requestAnimationFrame(onScroll)}},{passive:true});
 addEventListener('resize',function(){meas();onScroll()});addEventListener('load',function(){meas();onScroll()});
 meas();onScroll();
 var ids=['services','automation','how','faq','contact'];
